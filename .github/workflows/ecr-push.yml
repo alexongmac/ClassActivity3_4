@@ -11,22 +11,25 @@ on:
       - '.github/workflows/ecr-push.yml'
 env:
   AWS_REGION: us-east-1
-  ECR_REPOSITORY: alex-flask-private-repo
+  ECR_REPOSITORY: alex-flask-ecr
+  AWS_ROLE_ARN: arn:aws:iam::255945442255:role/alex-github-actions-ecr-push
 
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write   # required for OIDC
+      contents: read    # required for checkout
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Configure AWS credentials
+      - name: Configure AWS credentials (OIDC)
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
+          role-to-assume: ${{ env.AWS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
 
       - name: Set up QEMU (for arm64 build on x86 runner)
         uses: docker/setup-qemu-action@v3
