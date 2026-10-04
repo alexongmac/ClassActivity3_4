@@ -11,8 +11,7 @@ on:
       - '.github/workflows/ecr-push.yml'
 env:
   AWS_REGION: us-east-1
-  ECR_REPOSITORY: alex-flask-ecr
-  AWS_ROLE_ARN: arn:aws:iam::255945442255:role/alex-github-actions-ecr-push
+  AWS_ROLE_ARN: arn:aws:iam::255945442255:role/alex-github-actions-ecr-role
 
 jobs:
   build-and-push:
